@@ -51,6 +51,6 @@ def get_user_by_username(db_type):
             print("User/to_json controller ", selected_user)
             token = create_token(selected_user['id'])
             print("Controller / token ", token)
-            return jsonify({'token': token})
+            return jsonify({'token': token, 'user_id': selected_user['id']})
     except Exception as e:
         return jsonify({'User not found': str(e)}), 500

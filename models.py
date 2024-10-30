@@ -14,12 +14,14 @@ class User:
 
 
 class Income:
-    def __init__(self, user_id, note, income_amount, income_date, _id=None):
-        self.id = _id
+    def __init__(self, user_id, income_amount, income_date, note, income_id=None):
+        self.income_id = income_id
         self.user_id = user_id
-        self.note = note
         self.income_amount = income_amount
         self.income_date = income_date
+        self.note = note
+
+
 
     def to_json(self):
         return {
