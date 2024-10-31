@@ -2,7 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask.cli import load_dotenv
 
-from controllers import controller_user, controller_income, controller_expense
+from controllers import controller_user, controller_income, controller_expense, controller_expensecategory
 
 # Flaskin luominen
 app = Flask(__name__)
@@ -46,6 +46,16 @@ def get_expense(db_type, user_id):
 def new_expense(db_type):
     print("App.py")
     return controller_expense.new_expense(db_type)
+
+
+# EXPENSE CATEGORY ROUTET
+
+# Categorien haku frontin forms select-kohdan listausta varten
+@app.route('/expensecategory/<db_type>/<user_id>', methods=['GET'])
+def get_expense_gategories(db_type, user_id):
+    print("App.py")
+    return controller_expensecategory.get_expense_categories_by_id(db_type, user_id)
+
 
 # Ohjelman käynnistäminen
 if __name__ == '__main__':

@@ -34,15 +34,15 @@ class Income:
 
 
 class ExpenseCategory:
-    def __init__(self, user_id, category_name, user_defined=0, _id=None):
-        self.id = _id
+    def __init__(self, user_id, category_name, user_defined=0, category_id=None):
+        self.category_id = category_id
         self.user_id = user_id
         self.category_name = category_name
         self.user_defined = user_defined
 
     def to_json(self):
         return {
-            'id': self.id,
+            'category_id': self.category_id,
             'user_id': self.user_id,
             'category_name': self.category_name,
             'user_defined': self.user_defined

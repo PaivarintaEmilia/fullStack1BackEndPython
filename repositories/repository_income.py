@@ -7,7 +7,7 @@ class IncomeRepository:
     def __init__(self, connection):
         self.connection = connection
 
-    # Hae käyttäjä usernamen perusteella
+    # Hae income iser_id:n perusteella
     # Tämä tapahtuma on FE puolella, kun käyttäjä koittaa kirjautua sisään
     def get_monthly_income_by_id(self, user_id):
 
