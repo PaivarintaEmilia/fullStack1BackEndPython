@@ -25,7 +25,7 @@ class Income:
 
     def to_json(self):
         return {
-            'id': self.id,
+            'id': self.income_id,
             'user_id': self.user_id,
             'note': self.note,
             'income_amount': self.income_amount,
@@ -50,20 +50,21 @@ class ExpenseCategory:
 
 
 class Expense:
-    def __init__(self, user_id, category_id, expense_amount, note, expense_date, _id=None):
-        self.id = _id
+    def __init__(self, user_id, category_id, expense_amount, expense_date, note, expense_id=None):
+        self.expense_id = expense_id
         self.user_id = user_id
         self.category_id = category_id
         self.expense_amount = expense_amount
-        self.note = note
         self.expense_date = expense_date
+        self.note = note
+
 
     def to_json(self):
         return {
-            'id': self.id,
+            'expense_id': self.expense_id,
             'user_id': self.user_id,
             'category_id': self.category_id,
             'expense_amount': self.expense_amount,
-            'note': self.note,
-            'expense_date': self.expense_date
+            'expense_date': self.expense_date,
+            'note': self.note
         }

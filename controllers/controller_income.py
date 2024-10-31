@@ -13,10 +13,6 @@ def get_repository(db_type):
     # Palautetaan Repositoryn instanssi
     return IncomeRepository(connection)
 
-
-
-
-
 # FUNKTIOT TIEDON VÄLITTÄMISEEN REPON JA APP.PY VÄLILLÄ
 
 # Haetaan yksi käyttäjä usernamen perusteella
@@ -46,10 +42,33 @@ def get_monthly_income_by_id(db_type, user_id):
         total_income += amount.income_amount
 
     print("Testi: ", total_income)
-
-
-
     return jsonify({"total_income": total_income}), 200
+
+
+# Lisätään income
+def new_income(db_type):
+    try:
+
+        print("Controller alku income")
+        repository = get_repository(db_type)
+
+        # Otetaan talteet POST-requestin mukana lähetetty data
+        data = request.get_json()
+        print("Controller / data: ", data)
+
+        # Kutsutaan repo instanssin get_user_by_id-metodia ja haetaan kaikki käyttäjät
+        income_records = repository.insert_income(data)
+
+        # Saadaa palautuksena classin instanssi, jossa on lisätyn incomen tiedot
+        print("Controller / income_records: ", income_records)
+
+        if income_records:
+            # Palautetaan ok ilmoitus
+            return jsonify("Income Created Successfully"), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 '''
     amounts_json = []
     for amount in income_records:

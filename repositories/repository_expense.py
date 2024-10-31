@@ -2,22 +2,21 @@ import models
 from datetime import datetime, timedelta
 
 
-class IncomeRepository:
+class ExpenseRepository:
 
     def __init__(self, connection):
         self.connection = connection
 
     # Hae käyttäjä usernamen perusteella
     # Tämä tapahtuma on FE puolella, kun käyttäjä koittaa kirjautua sisään
-    def get_monthly_income_by_id(self, user_id):
+    def get_monthly_expense_by_id(self, user_id):
 
         # Array mihin tallennetaan luokan instanssit
         all_amounts = []
 
-        print("Repo / Income")
+        print("Repo / Expense")
         print("Repo / user_id: ", user_id)
 
-        # PÄIVÄN MUUTTUJIEN MÄÄRITTÄMINEN
 
         # Haetaan kuukauden ensimmäinen päivä
         first_day_month = datetime.today().replace(day=1).date()
@@ -41,31 +40,25 @@ class IncomeRepository:
 
         print("Repo / last_day: ", last_day_month)
 
-        # TIETOKANTAKYSELY
-
         with self.connection.cursor() as cursor:
-            cursor.execute('SELECT * FROM income WHERE user_id = %s AND income_date BETWEEN %s AND %s',
+            cursor.execute('SELECT * FROM expense WHERE user_id = %s AND expense_date BETWEEN %s AND %s',
                            (user_id, first_day_month, last_day_month))
             result = cursor.fetchall()
 
             for amounts in result:
-                all_amounts.append(models.Income(amounts[1], amounts[2], amounts[3], amounts[4], amounts[0]))
+                all_amounts.append(models.Expense(amounts[1], amounts[2], amounts[3], amounts[4], amounts[0]))
 
-            #print("Repo databasen income_id: ", result[0])
-            #print("Repo databasen user_id: ", result[1])
-            #print("Repo databasen income_amount: ", result[2])
-            #print("Repo databasen income_date: ", result[3])
-            #print("Repo databasen note: ", result[4])
+
             print("Repo all_amounts: ", all_amounts)
 
-            # PALAUTETAAN AINA LUOKAN INSTANSSI
+
+
             return all_amounts
 
-
     # LISÄTÄÄN UUSI INCOME, KUN KÄYTTÄJÄ ON SAANUT TULOJA
-    def insert_income(self, sent_data):
+    def insert_expense(self, sent_data):
 
-        print("Repo / Income")
+        print("Repo / Expense")
         print("Repo / sent_data", sent_data)
 
         # PÄIVÄN MUUTTUJIEN MÄÄRITTÄMINEN
@@ -78,23 +71,23 @@ class IncomeRepository:
         # TIETOKANTAKYSELY
 
         with self.connection.cursor() as cursor:
-            cursor.execute('INSERT INTO income (user_id, income_amount, income_date, note) VALUES (%s, %s, %s, %s) RETURNING income_id',
-                           (sent_data['user_id'], sent_data['income_amount'], date, sent_data['note']))
+            cursor.execute(
+                'INSERT INTO expense (user_id, category_id, expense_amount, expense_date, note) VALUES (%s, %s, %s, %s, %s) RETURNING expense_id',
+                (sent_data['user_id'], sent_data['category_id'], sent_data['expense_amount'], date, sent_data['note']))
             self.connection.commit()
 
-            income_id = cursor.fetchone()[0]
-            print("repo/postgres/income_id", income_id)
+            expense_id = cursor.fetchone()[0]
+            print("repo/postgres/expense_id", expense_id)
 
-            if income_id > 0:
+            if expense_id > 0:
                 # Haetaan lisätyn incomen tiedot
-                cursor.execute("SELECT * FROM income WHERE income_id = %s", (income_id,))
-                new_income = cursor.fetchone()
+                cursor.execute("SELECT * FROM expense WHERE expense_id = %s", (expense_id,))
+                new_expense = cursor.fetchone()
 
-                if new_income:
-                    print("Create income repo / instanssi ", models.Income(new_income[1], new_income[2], new_income[3], new_income[4], new_income[0]))
-                    return models.Income(new_income[1], new_income[2], new_income[3], new_income[4], new_income[0])
+                if new_expense:
+                    print("Create expense repo / instanssi ",
+                          models.Expense(new_expense[1], new_expense[2], new_expense[3], new_expense[4], new_expense[5], new_expense[0]))
+                    return models.Expense(new_expense[1], new_expense[2], new_expense[3], new_expense[4], new_expense[5], new_expense[0])
             else:
                 return None
-
-
 
